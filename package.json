@@ -5,7 +5,8 @@
   "author": "Dmitry Gorbunov <atskiisotona@gmail.com",
   "license": "MIT",
   "main": "protobuf.js",
-  "repository": "https://github.com/fuwaneko/node-protobuf",
+  "repository": "https://github.com/JesseChisholm/node-protobuf",
+  "branch": "blizzard-master",
   "dependencies": {
     "bindings": "^1.3.0",
     "nan": "^2.11.0"

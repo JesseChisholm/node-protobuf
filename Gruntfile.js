@@ -10,7 +10,9 @@ module.exports = function(grunt) {
 				commitMessage: "Released v<%= version %>",
 				tagMessage: "Tagged v<%= version %>",
 				github: {
-					repo: "fuwaneko/node-protobuf",
+					/* repo: "fuwaneko/node-protobuf", went UNMAINTAINED October 13, 2018 */
+					repo: "JesseChisholm/node-protobuf",
+          branch: "blizzard-master",
 					accessTokenVar: "GH_ACCESS_TOKEN"
 				}
 			}
