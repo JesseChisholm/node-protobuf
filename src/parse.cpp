@@ -247,6 +247,40 @@ Local<Object> ParsePartWithUnknown(Isolate *isolate,
       ret->Set(Nan::New<String>(field->name().c_str()).ToLocalChecked(), v);
     }
   }
+  // 2019.03.21 - treat known extension just like normal fields
+  count = d->extension_count();
+  for (uint32_t i = 0; i < count; i++) {
+    const FieldDescriptor *field = d->extension(i);
+
+    if (field != NULL) {
+
+      if (field->is_optional() && !r->HasField(message, field))
+        continue;
+
+      Local<Value> v;
+
+      if (field->is_repeated()) {
+        int size = r->FieldSize(message, field);
+        Local<Object> typedArray;
+        if (size > 0 && use_typed_array && NewTypedArray(typedArray, isolate, field, size)) {
+          for (int i = 0; i < size; i++)
+            typedArray->Set(
+                i, ParseField(isolate, message, r, field, i, preserve_int64));
+          v = typedArray;
+        } else {
+          Local<Array> array = Nan::New<Array>(size);
+          for (int i = 0; i < size; i++)
+            array->Set(
+                i, ParseField(isolate, message, r, field, i, preserve_int64));
+          v = array;
+        }
+      } else {
+        v = ParseField(isolate, message, r, field, -1, preserve_int64);
+      }
+
+      ret->Set(Nan::New<String>(field->name().c_str()).ToLocalChecked(), v);
+    }
+  }
 
   const google::protobuf::UnknownFieldSet &unknownFields =
       r->GetUnknownFields(message);
@@ -277,6 +311,40 @@ Local<Object> ParsePart(Isolate *isolate,
   uint32_t count = d->field_count();
   for (uint32_t i = 0; i < count; i++) {
     const FieldDescriptor *field = d->field(i);
+
+    if (field != NULL) {
+
+      if (field->is_optional() && !r->HasField(message, field))
+        continue;
+
+      Local<Value> v;
+
+      if (field->is_repeated()) {
+        int size = r->FieldSize(message, field);
+        Local<Object> typedArray;
+        if (size > 0 && use_typed_array && NewTypedArray(typedArray, isolate, field, size)) {
+          for (int i = 0; i < size; i++)
+            typedArray->Set(
+                i, ParseField(isolate, message, r, field, i, preserve_int64));
+          v = typedArray;
+        } else {
+          Local<Array> array = Nan::New<Array>(size);
+          for (int i = 0; i < size; i++)
+            array->Set(
+                i, ParseField(isolate, message, r, field, i, preserve_int64));
+          v = array;
+        }
+      } else {
+        v = ParseField(isolate, message, r, field, -1, preserve_int64);
+      }
+
+      ret->Set(Nan::New<String>(field->name().c_str()).ToLocalChecked(), v);
+    }
+  }
+  // 2019.03.21 - treat known extension just like normal fields
+  count = d->extension_count();
+  for (uint32_t i = 0; i < count; i++) {
+    const FieldDescriptor *field = d->extension(i);
 
     if (field != NULL) {
 
